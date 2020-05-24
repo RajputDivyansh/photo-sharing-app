@@ -39,6 +39,12 @@ class Cloud extends Component {
             incomingFiles: null,
             incomingLoading: true
         }
+        /*
+        WE BIND THE HANDLER FUNCTIONS IN CONSTRUCTOR
+        SO THAT THEY DO NOT LOSE THEIR CONTEXT
+        */
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     // componentDidMount() {
@@ -89,7 +95,14 @@ class Cloud extends Component {
         });
         console.log(this.state.selectedFiles);
         let data = new FormData();
-        data.append('file',this.state.selectedFiles); 
+        /*
+        WE NEED TO APPEND THE NAME OF FILES - OR YOU COULD
+        SAY value of 'name' KEY FROM SELECTED FILES ATTRIBUTES
+        */
+        for (const key of Object.keys(this.state.selectedFiles)) {
+            data.append('file', this.state.selectedFiles[key])
+        }
+        
         data.append('userId',userId);
         console.log(...data);
 
