@@ -103,12 +103,12 @@ class Login extends Component {
                 // console.log(this.state);
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('userId', res.data.userId);
-                const remainingMilliseconds = 60*60*1000;
-                const expiryDate = new Date(
-                    new Date().getTime() + remainingMilliseconds
-                    );
-                localStorage.setItem('expiryDate',expiryDate.toISOString());
-                this.props.history.push("/homepage");
+                this.props.history.push("/options");
+                // const remainingMilliseconds = 60*60*1000;
+                // const expiryDate = new Date(
+                //     new Date().getTime() + remainingMilliseconds
+                //     );
+                // localStorage.setItem('expiryDate',expiryDate.toISOString());
                 // this.setAutoLogout(remainingMilliseconds);
             })
             .catch((err) => {
@@ -127,13 +127,13 @@ class Login extends Component {
     }
 
     render() {
-        const { classes }= this.props;
+        const { classes } = this.props;
         const { errors, loading } = this.state;
         return (
             <Grid container className={classes.form}>
                 <Grid item sm/>
                 <Grid item sm>
-                    <Typography variant="h2" className="pageTitle">
+                    <Typography variant="h2" className={classes.pageTitle}>
                         Login
                     </Typography>
                     <form noValidate onSubmit={this.handleSubmit}>

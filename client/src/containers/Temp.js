@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import NavBar from '../components/UI/NavBar/Navbar';
+import NavbarApp from '../components/UI/NavBar/NavbarApp';
 import Classes from './Temp.module.css';
 import axios from 'axios';
 // import Login from './Login';
@@ -40,7 +40,7 @@ class HomePage extends Component {
     render() {
         return (
             <div>
-                <NavBar/>
+                <NavbarApp/>
                 <div  className={Classes.container}>
                 <h1>Temp</h1>
                 <h1>{this.state.temp}</h1>

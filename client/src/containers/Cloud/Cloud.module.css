@@ -1,0 +1,16 @@
+.Button {
+    float: right;
+}
+.Input {
+    color: blue;
+} 
+@media (max-width: 400px) {
+    .Button{
+        margin-top: 10px;
+        float: left;
+    }
+    .Input {
+        color: blue;
+        margin-bottom: 10px;
+    } 
+}

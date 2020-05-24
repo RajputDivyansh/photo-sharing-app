@@ -10,21 +10,17 @@ class Logout extends Component {
                     Authorization: 'Bearer ' + token
                 }
             })
-            .then((res) => {
-                
+            .then((res) => {               
                 console.log("inside logout then");
                 console.log(res);
                 localStorage.removeItem('token');
                 localStorage.removeItem('expiryDate');
                 localStorage.removeItem('userId');
-                this.history.pushState(null, null, this.location.href);
-                window.onpopstate = function () {
-                    this.history.go(1);
-                };
                 this.props.history.replace("/");
             })
             .catch((err) => {
                 console.log("not valid")
+                // console.log(err);
                 this.props.history.push("/");
                 // console.log(err);
                 // this.setState({

@@ -84,7 +84,7 @@ class Signup extends Component {
             <Grid container className={classes.form}>
                 <Grid item sm/>
                 <Grid item sm>
-                    <Typography variant="h2" className="pageTitle">
+                    <Typography variant="h2" className={classes.pageTitle}>
                         SignUp
                     </Typography>
                     <form noValidate onSubmit={this.handleSubmit}>

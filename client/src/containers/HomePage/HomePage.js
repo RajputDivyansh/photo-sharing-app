@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import axios from 'axios';
-import NavBar from '../../components/UI/NavBar/Navbar';
+import NavbarApp from '../../components/UI/NavBar/NavbarApp';
 import Classes from './HomePage.module.css';
 // import Login from './Login';
 // import Signup from './Signup';
@@ -41,7 +41,7 @@ class HomePage extends Component {
     render() {
         return (
             <div>
-                <NavBar />
+                <NavbarApp />
                 <div className={Classes.container}>
                 <h1>HomePage</h1>
                 <h1>{this.state.home}</h1>

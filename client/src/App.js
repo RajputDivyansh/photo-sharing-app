@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { MuiThemeProvider, createMuiTheme} from '@material-ui/core/styles';
+import axios from 'axios';
 
 import './App.css';
 import Login from './containers/Login/Login';
@@ -8,6 +9,8 @@ import Signup from './containers/SignUp/Signup';
 import HomePage from './containers/HomePage/HomePage';
 import Temp from './containers/Temp';
 import Logout from './containers/Login/Logout';
+import Options from './components/UI/Options/Options';
+import Cloud from './containers/Cloud/Cloud';
 
 const theme = createMuiTheme({
   palette: {
@@ -30,6 +33,34 @@ const theme = createMuiTheme({
 });
 
 class App extends Component {
+
+    componentDidMount() {
+		setInterval(() => {
+		  const token = localStorage.getItem('token');
+		  if(token) {
+			axios.get("http://localhost:4000/checktokenexpiry",{
+			  headers: {
+				Authorization: 'Bearer ' + token
+			}
+			})
+			.then((res) => {
+				console.log("res");
+			  console.log(res);
+			})
+			.catch((err) => {
+				console.log("error");
+			  console.log(err);
+			  if(err) {
+				  console.log("error1")
+				  console.log(this.props);
+				localStorage.clear();
+				window.location.href = "/";
+				alert("Session Timed Out\nPlease Login Again")       
+			  }
+			})
+		  }
+		},120000);
+	}
 
   // componentDidMount() {
   //   const token = localStorage.getItem('token');
@@ -75,9 +106,11 @@ class App extends Component {
             <Switch>
               <Route exact path="/" component={Login}/>
               <Route exact path="/signup" component={Signup}/>
+              <Route exact path="/logout" component={Logout}/> 
+			  <Route path="/options" component={Options} />
+			  <Route path="/cloud" component={Cloud} />
               <Route exact path="/homepage" component={HomePage}/>
               <Route exact path="/temp" component={Temp}/> 
-              <Route exact path="/logout" component={Logout}/> 
             </Switch>
           </Router>
         </div>
