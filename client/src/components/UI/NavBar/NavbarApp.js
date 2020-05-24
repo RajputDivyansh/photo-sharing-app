@@ -5,7 +5,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 
-class Navbar extends Component {
+class NavbarApp extends Component {
     render() {
         return (
             <AppBar>
@@ -21,4 +21,4 @@ class Navbar extends Component {
     }
 }
 
-export default Navbar;
+export default NavbarApp;

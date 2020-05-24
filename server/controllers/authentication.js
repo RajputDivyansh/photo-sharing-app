@@ -83,7 +83,7 @@ exports.logIn = (req,res,next) => {
                                     userId: loadUser._id.toString()
                                 },
                                 'some12$234%^3randomstring4646^*^*@#446idontknowwhyiusedthis3Qe@#2#@#@',
-                                { expiresIn: '1m' }
+                                { expiresIn: '1h' }
                             );
                             res.status(200).json({ token: token, userId: loadUser._id.toString() });
                         }
