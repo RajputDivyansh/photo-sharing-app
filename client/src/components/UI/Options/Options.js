@@ -8,11 +8,13 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 const styles ={
     uploadIcon: {
         fontSize: '12.8rem',
-        margin: '320px auto auto 130px'
+        margin: '320px auto auto 130px',
+        cursor: 'pointer'
     },
     appIcon: {
         fontSize: '12.8rem',
-        margin: '320px auto auto 130px'
+        margin: '320px auto auto 130px',
+        cursor: 'pointer'
     },
     iconTitle: {
         margin: 'auto auto auto 200px' 

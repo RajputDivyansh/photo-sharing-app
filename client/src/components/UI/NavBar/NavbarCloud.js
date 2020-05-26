@@ -1,4 +1,6 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import Button from '@material-ui/core/Button';
 //MUI STUFF
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -26,7 +28,8 @@ class NavbarCloud extends Component {
             <AppBar>
                 <Toolbar>
                     <HomeIcon className={classes.homeIcon}/>
-                    <AddIcon className={classes.addIcon} onClick={this.props.clicked}/>                    
+                    <AddIcon className={classes.addIcon} onClick={this.props.clicked}/>  
+                    <Button color="inherit" component={Link} to="/logout">Logout</Button>                  
                 </Toolbar>
             </AppBar>
         )

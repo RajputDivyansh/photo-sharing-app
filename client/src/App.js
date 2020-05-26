@@ -13,23 +13,23 @@ import Options from './components/UI/Options/Options';
 import Cloud from './containers/Cloud/Cloud';
 
 const theme = createMuiTheme({
-  palette: {
-    primary: {
-      light: '#33c9dc',
-      main: '#00bcd4',
-      dark: '#008394',
-      contrastText: '#fff'
-    },
-    secondary: {
-      light: '#ff6333',
-      main: '#ff3d00',
-      dark: '#b22a00',
-      contrastText: '#fff'
-    },
-  }
-  // typography: {
-  //   useNextVariants: true
-  // }
+	palette: {
+		primary: {
+			light: '#33c9dc',
+			main: '#00bcd4',
+			dark: '#008394',
+			contrastText: '#fff'
+		},
+		secondary: {
+			light: '#ff6333',
+			main: '#ff3d00',
+			dark: '#b22a00',
+			contrastText: '#fff'
+		},
+	}
+	// typography: {
+	//   useNextVariants: true
+	// }
 });
 
 class App extends Component {
@@ -100,21 +100,21 @@ class App extends Component {
 
   render(){
     return (
-      <MuiThemeProvider theme={theme}>  
-        <div className="App">
-          <Router>
-            <Switch>
-              <Route exact path="/" component={Login}/>
-              <Route exact path="/signup" component={Signup}/>
-              <Route exact path="/logout" component={Logout}/> 
-			  <Route path="/options" component={Options} />
-			  <Route path="/cloud" component={Cloud} />
-              <Route exact path="/homepage" component={HomePage}/>
-              <Route exact path="/temp" component={Temp}/> 
-            </Switch>
-          </Router>
-        </div>
-      </MuiThemeProvider>
+		<MuiThemeProvider theme={theme}>  
+			<div className="App">
+				<Router>
+					<Switch>
+						<Route exact path="/" component={Login}/>
+						<Route exact path="/signup" component={Signup}/>
+						<Route exact path="/logout" component={Logout}/> 
+						<Route path="/options" component={Options} />
+						<Route path="/cloud" component={Cloud} />
+						<Route exact path="/homepage" component={HomePage}/>
+						<Route exact path="/temp" component={Temp}/> 
+					</Switch>
+				</Router>
+			</div>
+		</MuiThemeProvider>
     );
   }
 }
