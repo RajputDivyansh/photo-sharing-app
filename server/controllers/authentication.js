@@ -2,6 +2,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/user');
+const UserProfile = require('../models/userProfile');
+
 const {
   validateSignupData,
   validateLoginData
@@ -43,11 +45,23 @@ exports.signUp = (req, res, next) => {
                     })
                     .then((result) => {
                         console.log(result);
-                        res.status(201).json('User created');
+                        const profile = new UserProfile({
+                            userID: result._id
+                        })
+                        return profile.save();
+                        // res.status(201).json('User created');
+                    })
+                    .then((result) => {
+                        console.log(result);
+                        return res.status(201).json("user created");
                     })
                     .catch((err) => {
                         console.log(err);
-                        res.status(500).json('something went wrong');
+                        return res.status(500).json('something went wrong');
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        return res.status(500).json('something went wrong');
                     })
             }
         })

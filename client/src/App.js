@@ -6,11 +6,14 @@ import axios from 'axios';
 import './App.css';
 import Login from './containers/Login/Login';
 import Signup from './containers/SignUp/Signup';
-import HomePage from './containers/HomePage/HomePage';
-import Temp from './containers/Temp';
+import HomePage from './containers/App/HomePage/HomePage';
+// import Temp from './containers/Temp';
+import Account from './containers/App/UserAccout/UserAccount';
 import Logout from './containers/Login/Logout';
 import Options from './components/UI/Options/Options';
 import Cloud from './containers/Cloud/Cloud';
+import UserProfile from './containers/App/UserProfile/UserProfile';
+import EditProfile from './containers/App/EditProfile/EditProfile';
 
 const theme = createMuiTheme({
 	palette: {
@@ -62,42 +65,6 @@ class App extends Component {
 		},120000);
 	}
 
-  // componentDidMount() {
-  //   const token = localStorage.getItem('token');
-  //   const expiryDate = localStorage.getItem('expiryDate');
-  //   console.log(token);
-  //   console.log(expiryDate);
-  //   if (!token || !expiryDate) {
-  //     return;
-  //   }
-  //   if (new Date(expiryDate) <= new Date()) {
-  //     this.logoutHandler();
-  //     return;
-  //   }
-  //   const userId = localStorage.getItem('userId');
-  //   const remainingMilliseconds =
-  //     new Date(expiryDate).getTime() - new Date().getTime();
-  //   this.setState({ token: token, userId: userId });
-  //   this.setAutoLogout(remainingMilliseconds);
-  // }
-
-  // logoutHandler = () => {
-  //   // this.setState({ token: null, userId: null });
-  //   localStorage.removeItem('token');
-  //   localStorage.removeItem('expiryDate');
-  //   localStorage.removeItem('userId');
-  //   console.log(this.props);
-  //   window.location.href = "/";
-  // };
-
-  // setAutoLogout = milliseconds => {
-  //   console.log("inside auto logout");
-  //   console.log(milliseconds);
-  //   setTimeout(() => {
-  //     this.logoutHandler();
-  //   }, milliseconds);
-  // };
-
   render(){
     return (
 		<MuiThemeProvider theme={theme}>  
@@ -110,7 +77,12 @@ class App extends Component {
 						<Route path="/options" component={Options} />
 						<Route path="/cloud" component={Cloud} />
 						<Route exact path="/homepage" component={HomePage}/>
-						<Route exact path="/temp" component={Temp}/> 
+						{/* <Route exact path="/temp" component={Temp}/>  */}
+						<Route exact path="/account/:id" component={Account}/>
+						<Route exact path="/profile/:id" component={UserProfile}/>
+						<Route exact path="/edit-profile/:id" component={EditProfile}/>
+						<Route exact path="/change-password/:id" component={EditProfile}/>
+						<Route exact path="/delete-account/:id" component={EditProfile}/>
 					</Switch>
 				</Router>
 			</div>

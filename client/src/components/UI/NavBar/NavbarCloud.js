@@ -16,7 +16,13 @@ const styles = {
     addIcon: {
         fontSize: '3rem',
         color: 'white',
-        marginLeft: '10px'
+        marginLeft: '10px',
+        position: 'absolute',
+        right: '80px'
+    },
+    logout: {
+        position: 'absolute',
+        right: '10px'
     }
 }
 
@@ -29,7 +35,7 @@ class NavbarCloud extends Component {
                 <Toolbar>
                     <HomeIcon className={classes.homeIcon}/>
                     <AddIcon className={classes.addIcon} onClick={this.props.clicked}/>  
-                    <Button color="inherit" component={Link} to="/logout">Logout</Button>                  
+                    <Button color="inherit" className={classes.logout} component={Link} to="/logout">Logout</Button>                  
                 </Toolbar>
             </AppBar>
         )

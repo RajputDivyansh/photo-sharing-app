@@ -27,7 +27,7 @@ class Options extends Component {
         if(type === "cloud")
             this.props.history.push("/cloud");
         else
-            this.props.history.push("/app");
+            this.props.history.push("/homepage");
     }
 
     render() {

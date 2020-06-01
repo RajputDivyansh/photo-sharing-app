@@ -41,6 +41,21 @@ exports.validateLoginData = (data) => {
   };
 };
 
+exports.validateChangePassword = (data) => {
+  let errors = {};
+  if(isEmpty(data.oldPassword)) errors.oldPassword = 'Must not be empty';
+  if(isEmpty(data.newPassword)) errors.newPassword = 'Must not be empty';
+  if(isEmpty(data.confirmPassword)) errors.confirmPassword = 'Must not be empty';
+  
+  if (data.newPassword !== data.confirmPassword)
+    errors.confirmPassword = 'Passwords must match';
+
+    return {
+      errors,
+      valid: Object.keys(errors).length === 0 ? true : false
+    };
+}
+
 /*exports.reduceUserDetails = (data) => {
   let userDetails = {};
 

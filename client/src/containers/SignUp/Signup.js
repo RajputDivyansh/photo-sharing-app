@@ -82,8 +82,8 @@ class Signup extends Component {
         const { errors, loading } = this.state;
         return (
             <Grid container className={classes.form}>
-                <Grid item sm/>
-                <Grid item sm>
+                <Grid item sm={4} xs={1}/>
+                <Grid item sm={4} xs={10}>
                     <Typography variant="h2" className={classes.pageTitle}>
                         SignUp
                     </Typography>
@@ -154,7 +154,7 @@ class Signup extends Component {
                         </small>
                     </form>
                 </Grid>
-                <Grid item sm/>
+                <Grid item sm={4} xs={1}/>
             </Grid>
         )
     }
