@@ -9,7 +9,7 @@ const isAuth = require('./middleware/is-auth');
 const { signUp, logIn } = require('./controllers/authentication');
 const { cupload, deleteImage, displayImage } = require('./controllers/uploadImages');
 const { getUser, postProfile, searchUser } = require('./controllers/searchUser');
-const { changePassword, deleteAccount } = require('./controllers/Account');
+const { changePassword, deleteAccount, userAccount } = require('./controllers/Account');
 const { getNotifications, saveNotification, deleteRequest } = require('./controllers/notification');
 const { addFriend } = require('./controllers/friends');
 
@@ -48,8 +48,9 @@ app.post("/cloud/delete/:imageId", deleteImage);
 
 //Photo App routes
 app.post("/searchuser", searchUser);
-app.get("/profile/:userId", isAuth, getUser);
-app.post("/profile/:userId", isAuth,postProfile);
+app.post("/getProfile/:userId", isAuth, getUser);
+app.post("/profile/:userId", isAuth, postProfile);
+app.get("/useraccount/:userId", isAuth, userAccount);
 app.post("/change-password", changePassword);
 app.post("/delete-everything", deleteAccount);
 app.post("/notification", saveNotification);

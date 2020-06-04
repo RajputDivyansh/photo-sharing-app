@@ -195,7 +195,7 @@ class NavbarApp extends Component {
                         <div style={{display: this.state.display}} className={classesFile.dropdownContent}>
                             {this.state.display === 'block' ? this.state.incomingLoading ? <CircularProgress size={30} className={classesFile.refresh} /> :
                                 this.state.searchData.map((data) => {
-                                    return  <SearchUser key={data._id} data={data} />
+                                    return  <SearchUser key={data.userId} data={data} />
                                 }) : null
                             }
                         </div>

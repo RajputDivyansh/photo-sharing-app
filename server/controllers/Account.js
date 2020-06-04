@@ -4,6 +4,28 @@ const User = require('../models/user');
 const UserProfile = require('../models/userProfile');
 const { validateChangePassword } = require('../middleware/validator');
 
+exports.userAccount = (req,res,next) => {
+    const userId = req.params.userId;
+    UserProfile.findOne({userID: userId})
+        .populate("userID")
+        .then((result) => {
+            if(result) {
+                console.log(`result\n${result}`)
+                let data = {};
+                data.image = result.image;
+                data.name = result.name;
+                data.website = result.website;
+                data.bio = result.bio;
+                data.username = result.userID.username;
+
+                return res.status(200).json(data);
+            }
+            else {
+                return res.status(500).json('user not found'); 
+            }
+        })
+}
+
 exports.changePassword = (req,res,next) => {
     userId = req.body.userId;
     password = req.body.oldPassword;

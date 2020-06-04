@@ -28,17 +28,22 @@ exports.displayImage = (req,res,next) => {
 	// const imageArray;
 	Cloud.find({userID: userId}).sort({"createdAt": -1})
 		.then((result) => {
-			console.log("recieved data");
-			const imageArray = result.map((reslt) => {
-				return {id: reslt._id, image: reslt.image, date: reslt.date, fileName: reslt.fileName};
-			})
-			// console.log(imageArray);
-			return res.status(200).json(imageArray);
+			if(result.length) {
+				console.log("recieved data");
+				const imageArray = result.map((reslt) => {
+					return {id: reslt._id, image: reslt.image, date: reslt.date, fileName: reslt.fileName};
+				})
+				// console.log(imageArray);
+				return res.status(200).json(imageArray);
+			}
+			else {
+				return res.status(400).json({error: "something went wrong"});
+			}
 		})
-		.catch((err) => {
-			console.log(err);
-			return res.status(400).json({error: "something went wrong"});
-		})
+		// .catch((err) => {
+		// 	console.log(err);
+		// 	return res.status(400).json({error: "something went wrong"});
+		// })
 }
 
 exports.deleteImage =(req,res,next) => {

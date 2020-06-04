@@ -45,7 +45,7 @@ class Notification extends Component {
         .then((result) => {
             console.log(result);
             this.setState({
-                status: result.data.notificationData.status
+                status: result.data.status
             })
         })
         .catch((err) => {

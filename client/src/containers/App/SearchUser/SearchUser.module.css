@@ -1,7 +1,7 @@
 .link{
     -webkit-box-align: center;
     /* margin: 8px 14px; */
-    height: 30px;
+    height: 50px;
     /* width: 100%; */
     align-items: center;
     text-decoration: none;
@@ -17,11 +17,11 @@
 }
 
 .user {
-    /* display: flex; */
+    display: flex;
     /* -webkit-box-orient: horizontal;
     -webkit-box-direction: normal; */
     align-items: center;
-    /* flex-direction: row; */
+    flex-direction: row;
     /* margin-right: 0; */
     /* white-space: nowrap; */
     width: 100%;
@@ -34,10 +34,16 @@
     text-align: center;
 }
 
-/* .imageDiv {
-
+.imageDiv {
+    margin: 0 15px 0 0;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
 }
 
 .image {
-
-} */
+    height: 100%;
+    width: 100%;
+} 

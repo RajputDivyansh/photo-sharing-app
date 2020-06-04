@@ -33,36 +33,44 @@ exports.signUp = (req, res, next) => {
                 return res.status(400).json({email: "this email is already in use"});
             }
             else {
-                return bcrypt
-                    .hash(password,12)
-                    .then((hashedpswd) => {
-                        const user = new User({
-                            email: req.body.email,
-                            password: hashedpswd,
-                            username: req.body.username
-                         });
-                        //  console.log('before signup');
-                        return user.save();
-                    })
-                    .then((result) => {
-                        console.log(result);
-                        const profile = new UserProfile({
-                            userID: result._id
-                        })
-                        return profile.save();
-                        // res.status(201).json('User created');
-                    })
-                    .then((result) => {
-                        console.log(result);
-                        return res.status(201).json("user created");
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        return res.status(500).json('something went wrong');
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        return res.status(500).json('something went wrong');
+                User.findOne({username: req.body.username})
+                    .then((doc) => {
+                        if(doc) {
+                            return res.status(400).json({username: "this username is already taken"});
+                        }
+                        else {
+                            return bcrypt
+                                .hash(password,12)
+                                .then((hashedpswd) => {
+                                    const user = new User({
+                                        email: req.body.email,
+                                        password: hashedpswd,
+                                        username: req.body.username
+                                     });
+                                    //  console.log('before signup');
+                                    return user.save();
+                                })
+                                .then((result) => {
+                                    console.log(result);
+                                    const profile = new UserProfile({
+                                        userID: result._id
+                                    })
+                                    return profile.save();
+                                    // res.status(201).json('User created');
+                                })
+                                .then((result) => {
+                                    console.log(result);
+                                    return res.status(201).json("user created");
+                                })
+                                .catch((err) => {
+                                    console.log(err);
+                                    return res.status(500).json('something went wrong');
+                                })
+                                .catch((err) => {
+                                    console.log(err);
+                                    return res.status(500).json('something went wrong');
+                                })
+                        }
                     })
             }
         })

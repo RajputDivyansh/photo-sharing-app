@@ -13,17 +13,23 @@ class UserProfile extends Component {
         super(props);
         this.state = {
             userData: null,
+            status: null,
+            sendBy: null,
             incomingData: false
+
         }
         this.arrayBufferToBase64 = this.arrayBufferToBase64.bind(this);
         this.sendRequest = this.sendRequest.bind(this);
+        this.confirmRequest = this.confirmRequest.bind(this);
+        this.deleteRequest = this.deleteRequest.bind(this);
     }
 
     componentDidMount() {
         const userId = this.props.match.params.id;
+        const id = localStorage.getItem("userId");
         const token = localStorage.getItem("token");
         console.log("inside did mount");
-        axios.get(`http://localhost:4000/profile/${userId}`,{
+        axios.post(`http://localhost:4000/getProfile/${userId}`,{id: id},{
             headers: {
                 Authorization: 'Bearer ' + token
             }
@@ -31,13 +37,41 @@ class UserProfile extends Component {
         .then((result) => {
             console.log(result);
             this.setState({
-                userData: result.data
+                userData: result.data,
+                status: result.data.status,
+                sendBy: result.data.sendBy
             })
             console.log(result);
         })
         .catch((err) => {
             console.log(err);
         })
+    }
+
+    componentDidUpdate(prevProps) {
+        if(prevProps.match.params.id !== this.props.match.params.id) {
+            const userId = this.props.match.params.id;
+            const id = localStorage.getItem("userId");
+            const token = localStorage.getItem("token");
+            console.log("inside did update");
+            axios.post(`http://localhost:4000/getProfile/${userId}`,{id: id},{
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            })
+            .then((result) => {
+                console.log(result);
+                this.setState({
+                    userData: result.data,
+                    status: result.data.status,
+                    sendBy: result.data.sendBy
+                })
+                console.log(result);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+        }
     }
 
     arrayBufferToBase64 = (buffer) => {
@@ -63,6 +97,10 @@ class UserProfile extends Component {
         })
         .then((result) => {
             console.log(result);
+            this.setState({
+                status: result.data.status,
+                sendBy: 'sender'
+            })
         })
         .catch((err) => {
             console.log(err);
@@ -70,17 +108,66 @@ class UserProfile extends Component {
 
     }
 
+    confirmRequest = () => {
+        const recieverId = localStorage.getItem('userId')
+        const token = localStorage.getItem('token');
+        const data = {
+            recieverId: recieverId,
+            senderId: this.state.userData.userId
+        }
+
+        axios.post('http://localhost:4000/add-friend',data,{
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then((result) => {
+            console.log(result);
+            this.setState({
+                status: result.data.status
+            })
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+
+    deleteRequest = () => {
+        const recieverId = localStorage.getItem('userId')
+        const token = localStorage.getItem('token');
+        const data = {
+            recieverId: recieverId,
+            senderId: this.state.userData.userId
+        }
+
+        axios.post('http://localhost:4000/delete-request',data,{
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then((result) => {
+            console.log(result);
+            this.setState({
+                status: 'none'
+            })
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+    }
+
     render() {
         console.log(this.state.userData);
         let imageData;
         if(this.state.userData){
-            if(this.state.userData.image.data[0]) {
-                imageData = `data:image/*;base64,${this.arrayBufferToBase64(this.state.userData.image.data)}`;
+            if(this.state.userData.profileData.image.data[0]) {
+                imageData = `data:image/*;base64,${this.arrayBufferToBase64(this.state.userData.profileData.image.data)}`;
             }
             else {
                 imageData = avatar;
             }
         }
+        // let disabled = this.state.status === 'pending' ? true : false;
         // console.log(this.props.match.params.id);
         return (
             <>
@@ -98,17 +185,35 @@ class UserProfile extends Component {
                                     </div>
                                     <section>
                                         <div>
-                                            <h2 className={classesContainer.username}>{this.state.userData.username}</h2>
+                                            <h2 className={classesContainer.username}>{this.state.userData.profileData.userID.username}</h2>
                                         </div>
                                         <div style={{marginTop: "15px"}}>
-                                            <p className={classesContainer.name}>{this.state.userData.name}</p>
-                                            <p className={classesContainer.text}>{this.state.userData.bio}</p>
-                                            <a href={this.state.userData.website} target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none'}}><p className={classesContainer.link}>{this.state.userData.website.split('//')[1]}</p></a>
+                                            <p className={classesContainer.name}>{this.state.userData.profileData.name}</p>
+                                            <p className={classesContainer.text}>{this.state.userData.profileData.bio}</p>
+                                            <a href={this.state.userData.profileData.website} target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none'}}><p className={classesContainer.link}>{this.state.userData.profileData.website.split('//')[1]}</p></a>
                                         </div>
                                         <div>
-                                            <Button variant="contained" color="primary" onClick={this.sendRequest}>
-                                                Connect
-                                            </Button>
+                                            {this.state.status === 'none' ?
+                                                <Button variant="contained" color="primary" onClick={this.sendRequest}>
+                                                    Connect
+                                                </Button> : 
+                                                this.state.status === 'accepted' ?
+                                                    <Button variant="contained" disabled>
+                                                        Connected
+                                                    </Button> :
+                                                    (this.state.status === 'pending' && this.state.sendBy === 'sender') ?
+                                                        <Button variant="contained" disabled>
+                                                            Pending...
+                                                        </Button> :
+                                                        <div>
+                                                            <Button variant="contained" color="primary" onClick={this.confirmRequest} /*className={classes.confirm}*/>
+                                                                Confirm
+                                                            </Button>
+                                                            <Button variant="contained" onClick={this.deleteRequest} style={{marginLeft: '10px'}}/*className={classes.delete}*/>
+                                                                Delete
+                                                            </Button>
+                                                        </div>    
+                                            }
                                         </div>
                                     </section>
                                 </header>
