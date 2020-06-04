@@ -62,7 +62,7 @@ exports.changePassword = (req,res,next) => {
 
 exports.deleteAccount = (req,res,next) => {
     const userId = req.body.userId;
-    UserProfile.findOneAndDelete({userId: userId})
+    UserProfile.findOneAndDelete({userID: userId})
         .then((result) => {
             console.log(result);
             return User.findByIdAndDelete(userId)

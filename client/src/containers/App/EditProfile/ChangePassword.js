@@ -7,6 +7,8 @@ import Typography from '@material-ui/core/Typography';
 
 import classes from './EditProfile.module.css';
 import classesPassword from './ChangePassword.module.css';
+import avatar from '../../../assets/images/avatar_for_photoApp.jpg';
+
 
 class ChangePassword extends Component {
     constructor(props) {
@@ -33,7 +35,8 @@ class ChangePassword extends Component {
 
     handleChange = (event) => {
         this.setState({
-            [event.target.name]: event.target.value 
+            [event.target.name]: event.target.value,
+            succes: {}
         })
     }
 
@@ -78,7 +81,16 @@ class ChangePassword extends Component {
     
     render() {
         // console.log(this.props);
-        let imageData = `data:image/*;base64,${this.arrayBufferToBase64(this.props.data.image.data)}`;
+        let imageData;
+        if(this.props.data){
+            if(this.props.data.image.data[0]) {
+                imageData = `data:image/*;base64,${this.arrayBufferToBase64(this.props.data.image.data)}`;
+            }
+            else {
+                imageData = avatar;
+            }
+        }
+        
         const { errors, loading, succes } = this.state;
         return (
             <article className={classes.article}>

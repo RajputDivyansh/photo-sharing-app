@@ -48,7 +48,8 @@ class Signup extends Component {
     handleSubmit = (event) => {
         event.preventDefault();
         this.setState({
-            loading: true
+            loading: true,
+            errors: {}
         });
         const userData = {
             email: this.state.email,
@@ -80,6 +81,7 @@ class Signup extends Component {
     render() {
         const { classes }= this.props;
         const { errors, loading } = this.state;
+        // console.log(errors);
         return (
             <Grid container className={classes.form}>
                 <Grid item sm={4} xs={1}/>
@@ -128,7 +130,7 @@ class Signup extends Component {
                             label="UserName"
                             className={classes.textField}
                             helperText={errors.username}
-                            error={errors.password ? true : false}
+                            error={errors.username ? true : false}
                             value={this.state.username}
                             onChange={this.handleChange}
                             fullWidth />

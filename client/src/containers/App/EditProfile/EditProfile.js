@@ -3,18 +3,23 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 import NavBarApp from '../../../components/UI/NavBar/NavbarApp';
 import classes from './EditProfile.module.css';
 import ChangePassword from './ChangePassword';
 import DeleteAccount from './DeleteAccount';
+import avatar from '../../../assets/images/avatar_for_photoApp.jpg';
+
 
 export class EditProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
             userData: null,
-            disabled: true
+            disabled: true,
+            succes: {},
+            loading: false
             // selectedFile: null
         }
         this.arrayBufferToBase64 = this.arrayBufferToBase64.bind(this);
@@ -100,12 +105,17 @@ export class EditProfile extends Component {
         updatedData[temp] = event.target.value
         this.setState({
             userData: updatedData,
-            disabled: false
+            disabled: false,
+            succes: {}
         })
     }
 
     submitData = (event) => {
         event.preventDefault();
+        this.setState({
+            disabled: true,
+            loading: true
+        })
         if(!this.state.disabled) {
             const userId = localStorage.getItem("userId");
             const token = localStorage.getItem("token");
@@ -141,9 +151,10 @@ export class EditProfile extends Component {
                 console.log(result);
                 // const updatedData = { ...this.state.userData };
                 // updatedData = result.data;
-                // this.setState({
-                //     userData: updatedData 
-                // })
+                this.setState({
+                    succes: result.data,
+                    loading: false
+                })
             })
             .catch((err) => {
                 console.log(err);
@@ -153,9 +164,15 @@ export class EditProfile extends Component {
 
     render() {
         console.log(this.state.userData);
+        const { loading, succes } = this.state;
         let imageData;
-        if(this.state.userData) {
-            imageData = `data:image/*;base64,${this.arrayBufferToBase64(this.state.userData.image.data)}`;
+        if(this.state.userData){
+            if(this.state.userData.image.data[0]) {
+                imageData = `data:image/*;base64,${this.arrayBufferToBase64(this.state.userData.image.data)}`;
+            }
+            else {
+                imageData = avatar;
+            }
         }
         const userId = localStorage.getItem("userId");
         var editLink = this.props.match.path.split("/")[1] === "edit-profile" ? classes.activeLink : classes.link;
@@ -240,7 +257,17 @@ export class EditProfile extends Component {
                                         </aside>
                                         <div className={classes.rightOuterDiv}>
                                             <div className={classes.rightInnerDiv}>
-                                                <Button variant="contained" color="primary" type="submit" disabled={this.state.disabled} className={classes.button}>Submit</Button>
+                                                <Button variant="contained" color="primary" type="submit" disabled={this.state.disabled} className={classes.button}>
+                                                    Submit
+                                                    {loading && (
+                                                        <CircularProgress size={30} className={classes.loading} />
+                                                    )}
+                                                </Button>
+                                                {succes.general && (
+                                                    <Typography variant="body2" className={classes.customError}>
+                                                        {succes.general}
+                                                    </Typography>
+                                                )}
                                             </div>
                                         </div>    
                                     </div>

@@ -10,6 +10,8 @@ const { signUp, logIn } = require('./controllers/authentication');
 const { cupload, deleteImage, displayImage } = require('./controllers/uploadImages');
 const { getUser, postProfile, searchUser } = require('./controllers/searchUser');
 const { changePassword, deleteAccount } = require('./controllers/Account');
+const { getNotifications, saveNotification, deleteRequest } = require('./controllers/notification');
+const { addFriend } = require('./controllers/friends');
 
 const MONGODB_URL =
     "mongodb+srv://divyansh:divyansh@college-byypw.mongodb.net/socialMediaApp?retryWrites=true&w=majority";
@@ -45,11 +47,15 @@ app.post("/cloud", isAuth, cupload);
 app.post("/cloud/delete/:imageId", deleteImage);
 
 //Photo App routes
-app.post("/searchuser", isAuth, searchUser);
+app.post("/searchuser", searchUser);
 app.get("/profile/:userId", isAuth, getUser);
 app.post("/profile/:userId", isAuth,postProfile);
 app.post("/change-password", changePassword);
 app.post("/delete-everything", deleteAccount);
+app.post("/notification", saveNotification);
+app.get("/notification/:id", getNotifications);
+app.post("/delete-request", deleteRequest);
+app.post("/add-friend", addFriend);
 
 mongoose
 .connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })

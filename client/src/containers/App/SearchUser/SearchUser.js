@@ -8,6 +8,9 @@ class SearchUser extends Component {
         return (
             <Link to={"/profile/" + this.props.data._id} className={classes.link}>
                 <div className={classes.user}>
+                    {/* <div className={classes.imageDiv}>
+                        <img src={} alt="userImage" className={classes.image}/>
+                    </div> */}
                     <div className={classes.name}>
                         <span>{this.props.data.username}</span>
                     </div>

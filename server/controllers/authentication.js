@@ -10,8 +10,9 @@ const {
   } = require("../middleware/validator");
 //console.log('outside signup');
 
+
 exports.signUp = (req, res, next) => {
-    
+
     const newUser = {
         password: req.body.password,
         userName: req.body.username,

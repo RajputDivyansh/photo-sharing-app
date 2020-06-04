@@ -14,6 +14,7 @@ import Options from './components/UI/Options/Options';
 import Cloud from './containers/Cloud/Cloud';
 import UserProfile from './containers/App/UserProfile/UserProfile';
 import EditProfile from './containers/App/EditProfile/EditProfile';
+import Notification from './containers/App/Notifications/Notifications';
 
 const theme = createMuiTheme({
 	palette: {
@@ -77,7 +78,7 @@ class App extends Component {
 						<Route path="/options" component={Options} />
 						<Route path="/cloud" component={Cloud} />
 						<Route exact path="/homepage" component={HomePage}/>
-						{/* <Route exact path="/temp" component={Temp}/>  */}
+						<Route exact path="/notifications" component={Notification}/> 
 						<Route exact path="/account/:id" component={Account}/>
 						<Route exact path="/profile/:id" component={UserProfile}/>
 						<Route exact path="/edit-profile/:id" component={EditProfile}/>

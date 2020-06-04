@@ -1,6 +1,7 @@
 const User = require('../models/user');
 const UserProfile = require('../models/userProfile');
-const util = require('util');
+// const util = require('util');
+const { reduceUserDetails } = require('../middleware/validator');
 
 exports.searchUser = (req,res,next) => {
     const search = req.body.user;
@@ -9,6 +10,27 @@ exports.searchUser = (req,res,next) => {
         .then((result) => {
             console.log(result);
             return res.status(200).json(result);
+            // let resultArray = []; 
+            // result.forEach((rslt) => {
+            //     UserProfile.findOne({userID: rslt._id})
+            //         .then((profileResult) => {
+            //             if(profileResult) {
+            //                 // console.log(`line16${profileResult}`)
+            //                 // console.log(`line17${profileResult[0].image}`)
+            //                 resultArray.push({username: rslt.username, image: profileResult.image});    
+            //             }
+            //             else {
+            //                 return res.status(500).json("not found in userprofile");
+            //             }
+            //             console.log("line27");
+            //             console.log(resultArray);
+            //             if(resultArray.length === result.length)
+            //                 return res.status(200).json(resultArray);
+            //         })
+            //         .catch((err) => {
+            //             console.log(`line21\n${err}`);
+            //         })
+            // })
         })
         .catch((err) => {
             console.log(err);
@@ -24,6 +46,7 @@ exports.getUser = (req,res,next) => {
         .then((result) => {
             console.log(`result\n${result}`)
             let data = {};
+            data.userId = userId;
             data.image = result[0].image;
             data.name = result[0].name;
             data.website = result[0].website;
@@ -39,7 +62,7 @@ exports.getUser = (req,res,next) => {
     
 exports.postProfile = (req,res,next) => {
     const userId = req.params.userId;
-    const name = req.body.name;
+    let name = req.body.name;
     // const username = req.body.user;
     let file = null;
     if(req.files)
@@ -50,9 +73,20 @@ exports.postProfile = (req,res,next) => {
     // // if(username)
     //     user = username;
     //     console.log(user);
-    const website = req.body.website;
-    const bio = req.body.bio;
-    const use = req.body.use;
+    let website = req.body.website;
+    let bio = req.body.bio;
+    let use = req.body.use;
+    const data = {
+        name: name,
+        bio: bio,
+        website: website
+    }
+
+    const cleanData = reduceUserDetails(data);
+    name = cleanData.name;
+    bio = cleanData.bio;
+    website = cleanData.website;
+
     // console.log(req.files[0]);
     console.log(userId);
     UserProfile.findOne({userID: userId})
@@ -109,7 +143,7 @@ exports.postProfile = (req,res,next) => {
                             return res.status(201).json(result.image);
                         }
                         else {
-                            return res.status(201).json("updated");
+                            return res.status(201).json({general: "Data saved successfuly"});
                         }
                     })
                     .catch((err) => {

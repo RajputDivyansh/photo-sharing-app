@@ -9,6 +9,17 @@ const isEmpty = (string) => {
   else return false;
 };
 
+const passwordLength = (password) => {
+  if(password.length >5 ) return true;
+  else return false;
+}
+
+const isValidPassword = (password) => {
+  const regEx = /^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/;
+  if (password.match(regEx)) return true;
+  else return false;
+}
+
 exports.validateSignupData = (data) => {
   let errors = {};
 
@@ -21,6 +32,14 @@ exports.validateSignupData = (data) => {
   if (isEmpty(data.password)) errors.password = 'Must not be empty';
   if (data.password !== data.confirmPassword)
     errors.confirmPassword = 'Passwords must match';
+
+  if(!passwordLength(data.password)) {
+    errors.password = 'Password must be of length greater than 5';
+  }
+  else if(!isValidPassword(data.password)) {
+    errors.password = 'Password must contain one special and numeric character';
+  }
+
   if (isEmpty(data.userName)) errors.handle = 'Must not be empty';
 
   return {
@@ -50,15 +69,23 @@ exports.validateChangePassword = (data) => {
   if (data.newPassword !== data.confirmPassword)
     errors.confirmPassword = 'Passwords must match';
 
+  if(!passwordLength(data.newPassword)) {
+    errors.newPassword = 'Password must be of length greater than 5';
+  }
+  else if(!isValidPassword(data.newPassword)) {
+    errors.newPassword = 'Password must contain one special and numeric character';
+  }
+
     return {
       errors,
       valid: Object.keys(errors).length === 0 ? true : false
     };
 }
 
-/*exports.reduceUserDetails = (data) => {
+exports.reduceUserDetails = (data) => {
   let userDetails = {};
 
+  if (!isEmpty(data.name.trim())) userDetails.name = data.name;
   if (!isEmpty(data.bio.trim())) userDetails.bio = data.bio;
   if (!isEmpty(data.website.trim())) {
     //https://website.com
@@ -66,7 +93,7 @@ exports.validateChangePassword = (data) => {
       userDetails.website = `http://${data.website.trim()}`;
     } else userDetails.website = data.website;
   }
-  if (!isEmpty(data.location.trim())) userDetails.location = data.location;
+  // if (!isEmpty(data.location.trim())) userDetails.location = data.location;
 
   return userDetails;
-};*/
+};

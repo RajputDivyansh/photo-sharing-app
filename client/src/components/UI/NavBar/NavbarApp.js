@@ -175,6 +175,7 @@ class NavbarApp extends Component {
                 <Toolbar>
                     <Button color="inherit" component={Link} to="/homepage">HomePage</Button>
                     <Button color="inherit" component={Link} to="/notifications">Notifications</Button>
+                    <Button color="inherit" component={Link} to="/cloud">Cloud</Button>
                     <div className={classes.search + ' ' + classesFile.dropdown} /*tabIndex="0" onBlur={this.displayBlur}*/>
                         <div className={classes.searchIcon}>
                             <SearchIcon />

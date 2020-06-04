@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import NavBarApp from '../../../components/UI/NavBar/NavbarApp';
 import UserPosts from '../UserPosts/UserPosts';
+import avatar from '../../../assets/images/avatar_for_photoApp.jpg';
 
 class UserProfile extends Component {
     constructor(props) {
@@ -15,6 +16,7 @@ class UserProfile extends Component {
             incomingData: false
         }
         this.arrayBufferToBase64 = this.arrayBufferToBase64.bind(this);
+        this.sendRequest = this.sendRequest.bind(this);
     }
 
     componentDidMount() {
@@ -45,12 +47,39 @@ class UserProfile extends Component {
 		return window.btoa(binary);
 	};
 
+    sendRequest = () => {
+        const senderId = localStorage.getItem('userId');
+        const token = localStorage.getItem('token');
+        const recieverId = this.state.userData.userId;
+        const notificationData = {
+            senderId: senderId,
+            recieverId: recieverId
+        }
+
+        axios.post(`http://localhost:4000/notification`, notificationData,{
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then((result) => {
+            console.log(result);
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+
+    }
 
     render() {
         console.log(this.state.userData);
         let imageData;
-        if(this.state.userData) {
-            imageData = `data:image/*;base64,${this.arrayBufferToBase64(this.state.userData.image.data)}`;
+        if(this.state.userData){
+            if(this.state.userData.image.data[0]) {
+                imageData = `data:image/*;base64,${this.arrayBufferToBase64(this.state.userData.image.data)}`;
+            }
+            else {
+                imageData = avatar;
+            }
         }
         // console.log(this.props.match.params.id);
         return (
@@ -74,10 +103,10 @@ class UserProfile extends Component {
                                         <div style={{marginTop: "15px"}}>
                                             <p className={classesContainer.name}>{this.state.userData.name}</p>
                                             <p className={classesContainer.text}>{this.state.userData.bio}</p>
-                                            <a href={this.state.userData.website} target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none'}}><p>{this.state.userData.website}</p></a>
+                                            <a href={this.state.userData.website} target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none'}}><p className={classesContainer.link}>{this.state.userData.website.split('//')[1]}</p></a>
                                         </div>
                                         <div>
-                                            <Button variant="contained" color="primary">
+                                            <Button variant="contained" color="primary" onClick={this.sendRequest}>
                                                 Connect
                                             </Button>
                                         </div>

@@ -168,3 +168,9 @@
     color: #fff;
     border-radius: 4px;
 }
+
+.customError {
+    color: deepskyblue;
+    font-size: '0.8rem';
+    padding-top: 10px;
+}
