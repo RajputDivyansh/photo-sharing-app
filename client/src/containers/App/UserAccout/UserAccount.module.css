@@ -82,6 +82,20 @@
     white-space: nowrap;
 }
 
+.postDiv {
+    display: flex;
+    flex-direction: row;
+    width: 993px;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    /* background-color: #fafafa; */
+}
+
+.postLoader {
+    margin-left: -35px;
+    margin-top: 70px;
+}
+
 @media (max-width: 450px) {
     .grid {
         margin-left: 0;

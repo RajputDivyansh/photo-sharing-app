@@ -11,7 +11,8 @@ const { cupload, deleteImage, displayImage } = require('./controllers/uploadImag
 const { getUser, postProfile, searchUser } = require('./controllers/searchUser');
 const { changePassword, deleteAccount, userAccount } = require('./controllers/Account');
 const { getNotifications, saveNotification, deleteRequest } = require('./controllers/notification');
-const { addFriend } = require('./controllers/friends');
+const { addFriend, displayFriends, removeFriend } = require('./controllers/friends');
+const { addPost, getUsersPost, getFriendsPost } = require('./controllers/post');
 
 const MONGODB_URL =
     "mongodb+srv://divyansh:divyansh@college-byypw.mongodb.net/socialMediaApp?retryWrites=true&w=majority";
@@ -57,6 +58,11 @@ app.post("/notification", saveNotification);
 app.get("/notification/:id", getNotifications);
 app.post("/delete-request", deleteRequest);
 app.post("/add-friend", addFriend);
+app.get("/friends/:userId", displayFriends);
+app.post("/deletefriend", removeFriend);
+app.post("/addpost", addPost);
+app.get("/getuserposts/:userId", getUsersPost);
+app.get("/getfriendspost/:userId", getFriendsPost);
 
 mongoose
 .connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })

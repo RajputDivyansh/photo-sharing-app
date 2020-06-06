@@ -9,6 +9,7 @@ import Signup from './containers/SignUp/Signup';
 import HomePage from './containers/App/HomePage/HomePage';
 // import Temp from './containers/Temp';
 import Account from './containers/App/UserAccout/UserAccount';
+import FriendsList from './containers/App/UserAccout/FriendsList/FriendsList';
 import Logout from './containers/Login/Logout';
 import Options from './components/UI/Options/Options';
 import Cloud from './containers/Cloud/Cloud';
@@ -80,6 +81,7 @@ class App extends Component {
 						<Route exact path="/homepage" component={HomePage}/>
 						<Route exact path="/notifications" component={Notification}/> 
 						<Route exact path="/account/:id" component={Account}/>
+						<Route exact path="/friends" component={FriendsList}/>
 						<Route exact path="/profile/:id" component={UserProfile}/>
 						<Route exact path="/edit-profile/:id" component={EditProfile}/>
 						<Route exact path="/change-password/:id" component={EditProfile}/>

@@ -34,7 +34,7 @@ export class EditProfile extends Component {
         const userId = this.props.match.params.id;
         const token = localStorage.getItem("token");
         console.log("inside did mount");
-        axios.get(`http://localhost:4000/profile/${userId}`,{
+        axios.get(`http://localhost:4000/useraccount/${userId}`,{
             headers: {
                 Authorization: 'Bearer ' + token
             }

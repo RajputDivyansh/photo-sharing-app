@@ -7,17 +7,18 @@ import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import NavBarApp from '../../../components/UI/NavBar/NavbarApp';
 import UserPosts from '../UserPosts/UserPosts';
-// import { Avatar } from '@material-ui/core';
-
 import avatar from '../../../assets/images/avatar_for_photoApp.jpg';
 
 class UserProfile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            userData: null
+            userData: null,
+            posts: null,
+            postLoading: true
         }
         this.arrayBufferToBase64 = this.arrayBufferToBase64.bind(this);
+        this.loadPost = this.loadPost.bind(this);
     }
 
     componentDidMount() {
@@ -35,9 +36,35 @@ class UserProfile extends Component {
                 userData: result.data
             })
             console.log(result);
+            this.loadPost();
         })
         .catch((err) => {
             console.log(err);
+        })
+    }
+
+    loadPost = () => {
+        const userId = this.props.match.params.id;
+        const token = localStorage.getItem("token");
+        axios.get(`http://localhost:4000/getuserposts/${userId}`,{
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then((posts) => {
+            console.log(posts);
+            this.setState({
+                posts: posts.data,
+                postLoading: false
+            })
+            // console.log(this.state.posts);
+        })
+        .catch((err) => {
+            console.log(err);
+            this.setState({
+                posts: "No Posts yet",
+                postLoading: false
+            })
         })
     }
 
@@ -50,7 +77,8 @@ class UserProfile extends Component {
 
 
     render() {
-        console.log(this.state.userData);
+        // console.log(this.state.userData);
+        console.log(this.state.posts);
         let imageData;
         if(this.state.userData){
             if(this.state.userData.image.data[0]) {
@@ -87,8 +115,11 @@ class UserProfile extends Component {
                                             <a href={this.state.userData.website} target="_blank" rel="noopener noreferrer" style={{textDecoration: 'none'}}><p className={classesContainer.link}>{this.state.userData.website.split('//')[1]}</p></a>
                                         </div>
                                         <div>
-                                            <Button variant="contained" color="primary" component={Link} to={"/edit-profile/" + userId}>
+                                            <Button variant="contained" color="primary" component={Link} to={"/edit-profile/" + userId} style={{marginRight: '10px'}}>
                                                 Edit Profile
+                                            </Button>
+                                            <Button variant="contained" color="primary" component={Link} to={"/friends"}>
+                                                Friends
                                             </Button>
                                         </div>
                                     </section>
@@ -96,8 +127,13 @@ class UserProfile extends Component {
                                 <div className={classesContainer.postBox}>
                                     <p>Posts</p>
                                 </div>
-                                <div className={classesContainer.container}>
-                                    <UserPosts />
+                                <div className={classesContainer.postDiv}>
+                                {this.state.postLoading ? <CircularProgress size={50} className={classesContainer.postLoader} /> :
+                                    this.state.posts === "No Posts yet" ? <p>No Posts Yet!!!</p> :
+                                        this.state.posts.map((post) => {
+                                            return <UserPosts key={post._id} data={post}/>
+                                        })
+                                }
                                 </div>
                             </Grid>
                             <Grid item sm={3} xs={1}/>

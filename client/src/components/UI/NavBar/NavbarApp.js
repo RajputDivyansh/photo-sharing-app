@@ -9,6 +9,7 @@ import InputBase from '@material-ui/core/InputBase';
 import SearchIcon from '@material-ui/icons/Search';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ClearIcon from '@material-ui/icons/Clear';
+import AddIcon from '@material-ui/icons/Add';
 import { fade, withStyles } from '@material-ui/core/styles';
 
 import SearchUser from '../../../containers/App/SearchUser/SearchUser';
@@ -57,6 +58,11 @@ const styles = (theme) => ({
       [theme.breakpoints.up('md')]: {
         width: '20ch',
       },
+    },
+    addIcon: {
+        position: 'absolute',
+        right: '190px',
+        fontSize: '2.5rem'
     },
     account: {
         position: 'absolute',
@@ -200,6 +206,7 @@ class NavbarApp extends Component {
                             }
                         </div>
                     </div>
+                    <AddIcon className={classes.addIcon} onClick={this.props.clicked}/>
                     <Button color="inherit" className={classes.account} component={Link} to={"/account/" + userId}>Account</Button>
                     <Button color="inherit" className={classes.logout} component={Link} to="/logout">Logout</Button>
                 </Toolbar>
