@@ -87,13 +87,17 @@
     flex-direction: row;
     width: 993px;
     flex-wrap: wrap;
-    justify-content: space-around;
+    justify-content: flex-start;
     /* background-color: #fafafa; */
 }
 
 .postLoader {
-    margin-left: -35px;
-    margin-top: 70px;
+    margin-left: 46%;
+    margin-top: 10%;
+}
+
+.h1 {
+    margin-left: 40%;
 }
 
 @media (max-width: 450px) {

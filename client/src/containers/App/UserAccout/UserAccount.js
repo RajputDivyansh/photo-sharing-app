@@ -128,12 +128,12 @@ class UserProfile extends Component {
                                     <p>Posts</p>
                                 </div>
                                 <div className={classesContainer.postDiv}>
-                                {this.state.postLoading ? <CircularProgress size={50} className={classesContainer.postLoader} /> :
-                                    this.state.posts === "No Posts yet" ? <p>No Posts Yet!!!</p> :
-                                        this.state.posts.map((post) => {
-                                            return <UserPosts key={post._id} data={post}/>
-                                        })
-                                }
+                                    {this.state.postLoading ? <CircularProgress size={50} className={classesContainer.postLoader} /> :
+                                        this.state.posts === "No Posts yet" ? <h1 className={classesContainer.h1}>No Posts Yet!!!</h1> :
+                                            this.state.posts.map((post) => {
+                                                return <UserPosts key={post._id} data={post}/>
+                                            })
+                                    }
                                 </div>
                             </Grid>
                             <Grid item sm={3} xs={1}/>

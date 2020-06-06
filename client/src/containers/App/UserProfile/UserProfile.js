@@ -15,13 +15,15 @@ class UserProfile extends Component {
             userData: null,
             status: null,
             sendBy: null,
-            incomingData: false
-
+            incomingData: false,
+            posts: null,
+            postLoading: true
         }
         this.arrayBufferToBase64 = this.arrayBufferToBase64.bind(this);
         this.sendRequest = this.sendRequest.bind(this);
         this.confirmRequest = this.confirmRequest.bind(this);
         this.deleteRequest = this.deleteRequest.bind(this);
+        this.loadPost = this.loadPost.bind(this);
     }
 
     componentDidMount() {
@@ -41,10 +43,37 @@ class UserProfile extends Component {
                 status: result.data.status,
                 sendBy: result.data.sendBy
             })
-            console.log(result);
+            if(result.data.status === "accepted")
+                    this.loadPost();
+            // console.log(result);
         })
         .catch((err) => {
             console.log(err);
+        })
+    }
+
+    loadPost = () => {
+        const userId = this.props.match.params.id;
+        const token = localStorage.getItem("token");
+        axios.get(`http://localhost:4000/getuserposts/${userId}`,{
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then((posts) => {
+            console.log(posts);
+            this.setState({
+                posts: posts.data,
+                postLoading: false
+            })
+            // console.log(this.state.posts);
+        })
+        .catch((err) => {
+            console.log(err);
+            this.setState({
+                posts: "No Posts yet",
+                postLoading: false
+            })
         })
     }
 
@@ -66,7 +95,9 @@ class UserProfile extends Component {
                     status: result.data.status,
                     sendBy: result.data.sendBy
                 })
-                console.log(result);
+                if(result.data.status === "accepted")
+                    this.loadPost();
+                // console.log(result);
             })
             .catch((err) => {
                 console.log(err);
@@ -220,8 +251,15 @@ class UserProfile extends Component {
                                 <div className={classesContainer.postBox}>
                                     <p>Posts</p>
                                 </div>
-                                <div className={classesContainer.container}>
-                                    <UserPosts />
+                                <div className={classesContainer.postDiv}>
+                                    {this.state.status === "accepted" ? 
+                                        this.state.postLoading ? <CircularProgress size={50} className={classesContainer.postLoader} /> :
+                                        this.state.posts === "No Posts yet" ? <p>No Posts Yet!!!</p> :
+                                            this.state.posts.map((post) => {
+                                                return <UserPosts key={post._id} data={post}/>
+                                            }):
+                                            <h1 className={classesContainer.h1}>This Account is Private</h1> 
+                                    }
                                 </div>
                             </Grid>
                             <Grid item sm={3} xs={1}/>

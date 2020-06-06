@@ -10,6 +10,11 @@ import SearchIcon from '@material-ui/icons/Search';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import ClearIcon from '@material-ui/icons/Clear';
 import AddIcon from '@material-ui/icons/Add';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
+import TextField from '@material-ui/core/TextField';
+
 import { fade, withStyles } from '@material-ui/core/styles';
 
 import SearchUser from '../../../containers/App/SearchUser/SearchUser';
@@ -71,7 +76,21 @@ const styles = (theme) => ({
     logout: {
         position: 'absolute',
         right: '20px'
-    }
+    },
+    modal: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    paper: {
+        backgroundColor: theme.palette.background.paper,
+        width: '600px',
+        height: '600px',
+        boxShadow: theme.shadows[5],
+    },
+    progess: {
+        position: 'absolute'
+	}	
   });
 
 class NavbarApp extends Component {
@@ -81,12 +100,99 @@ class NavbarApp extends Component {
             display: 'none',
             search: '',
             searchData: null,
-            incomingLoading: false
+            incomingLoading: false,
+            open: false,
+            caption: '',
+            selectedFiles: null,
+            displayImage: null,
+            loading: false
         }
         this.onSearch = this.onSearch.bind(this);
         this.displayFocus = this.displayFocus.bind(this);
         this.displayBlur = this.displayBlur.bind(this);
+        this.handleOpen = this.handleOpen.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleClose = this.handleClose.bind(this);
+        this.fileUploadAction = this.fileUploadAction.bind(this);
+        this.inputReference = React.createRef();
+        this.showImage = this.showImage.bind(this);
     }
+
+    fileUploadAction = () => {
+        this.inputReference.current.click();
+    }
+
+    showImage = (event) => {
+        this.setState({
+            selectedFiles: event.target.files[0],
+            displayImage: URL.createObjectURL(event.target.files[0])
+        })
+        this.handleOpen();
+    }
+
+    handleOpen = () => {
+        console.log("handletoggle");
+        const open = true;
+        this.setState({open: open});
+    };
+
+    handleClose = () => {
+        console.log("handleclose");
+        this.setState({
+            open: false,
+            caption: ''
+        });
+    };
+
+    handleChange = (event) => {
+        console.log(event.target.value)
+        this.setState({
+            caption: event.target.value
+        })
+    }
+
+    handleSubmit = (event) => {
+        event.preventDefault();
+        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
+        this.setState({
+            loading: true
+        });
+		// console.log(this.state.selectedFiles);
+		
+        let data = new FormData();
+        data.append('file',this.state.selectedFiles)
+		data.append('userId',userId);
+		data.append('caption',this.state.caption);
+        console.log(...data);
+
+        axios.post('http://localhost:4000/addpost',data,{
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then((result) => {
+            console.log(result);
+            this.setState({
+                loading: false,
+                selectedFiles: null,
+                caption: ''
+            })
+            this.handleClose();
+        })
+        .catch((err) => {
+            console.log(err);
+            this.setState({
+                loading: false,
+                selectedFiles: null,
+                caption: ''
+            })
+            // localStorage.clear();
+            // this.props.history.push("/");
+        })
+	};
+
 
     onSearch = (event) => {
         event.preventDefault();
@@ -175,42 +281,90 @@ class NavbarApp extends Component {
 
     render() {
         const { classes } = this.props;
+        const { loading } = this.state;
         const userId = localStorage.getItem("userId");
         return (
-            <AppBar>
-                <Toolbar>
-                    <Button color="inherit" component={Link} to="/homepage">HomePage</Button>
-                    <Button color="inherit" component={Link} to="/notifications">Notifications</Button>
-                    <Button color="inherit" component={Link} to="/cloud">Cloud</Button>
-                    <div className={classes.search + ' ' + classesFile.dropdown} /*tabIndex="0" onBlur={this.displayBlur}*/>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
+            <>
+                <AppBar>
+                    <Toolbar>
+                        <Button color="inherit" component={Link} to="/homepage">HomePage</Button>
+                        <Button color="inherit" component={Link} to="/notifications">Notifications</Button>
+                        <Button color="inherit" component={Link} to="/cloud">Cloud</Button>
+                        <div className={classes.search + ' ' + classesFile.dropdown} /*tabIndex="0" onBlur={this.displayBlur}*/>
+                            <div className={classes.searchIcon}>
+                                <SearchIcon />
+                            </div>
+                            <InputBase
+                                placeholder="Search…"
+                                classes={{
+                                    root: classes.inputRoot,
+                                    input: classes.inputInput,
+                                }}
+                                inputProps={{ 'aria-label': 'search' }}
+                                value={this.state.search}
+                                onChange={this.onSearch}
+                                onFocus={this.displayFocus}
+                                /*onBlur={this.displayBlur}*/ />
+                            {this.state.search ? <ClearIcon className={classes.clear} onClick={this.clearSearch}/> : null}
+                            <div style={{display: this.state.display}} className={classesFile.dropdownContent}>
+                                {this.state.display === 'block' ? this.state.incomingLoading ? <CircularProgress size={30} className={classesFile.refresh} /> :
+                                    this.state.searchData.map((data) => {
+                                        return  <SearchUser key={data.userId} data={data} />
+                                    }) : null
+                                }
+                            </div>
                         </div>
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            value={this.state.search}
-                            onChange={this.onSearch}
-                            onFocus={this.displayFocus}
-                            /*onBlur={this.displayBlur}*/ />
-                        {this.state.search ? <ClearIcon className={classes.clear} onClick={this.clearSearch}/> : null}
-                        <div style={{display: this.state.display}} className={classesFile.dropdownContent}>
-                            {this.state.display === 'block' ? this.state.incomingLoading ? <CircularProgress size={30} className={classesFile.refresh} /> :
-                                this.state.searchData.map((data) => {
-                                    return  <SearchUser key={data.userId} data={data} />
-                                }) : null
-                            }
-                        </div>
+                        <AddIcon className={classes.addIcon} onClick={this.fileUploadAction}/>
+                        <input id="input" type="file" accept="image/*" ref={this.inputReference} onChange={this.showImage} style={{display: 'none'}}/>
+                        <Button color="inherit" className={classes.account} component={Link} to={"/account/" + userId}>Account</Button>
+                        <Button color="inherit" className={classes.logout} component={Link} to="/logout">Logout</Button>
+                    </Toolbar>
+                </AppBar>
+                <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    className={classes.modal}
+                    open={this.state.open}
+                    onClose={this.handleClose}
+                    closeAfterTransition
+                    BackdropComponent={Backdrop}
+                    BackdropProps={{
+                    timeout: 500,
+                }} >
+                <Fade in={this.state.open}>
+                    <div className={classes.paper}>
+                        <form onSubmit={this.handleSubmit} encType="multipart/form-data">
+                            {/* <input type="file" name="file" multiple/> */}
+                            <img src={this.state.displayImage} alt="postImage" className={classesFile.image}/>
+                            <div className={classesFile.divTextField}>
+                                <TextField
+                                    id="caption"
+                                    name="caption"
+                                    type="text"
+                                    className={classesFile.textField}
+                                    placeholder="Caption..."
+                                    autoComplete="off"
+                                    value={this.state.caption}
+                                    onChange={this.handleChange}
+                                    variant="outlined"
+                                    fullWidth />
+                            </div>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                                className={classesFile.Button} 
+                                disabled={loading}>
+                                UPLOAD 
+                                {loading && (
+                                    <CircularProgress size={30} className={classes.progress} />
+                                )}   
+                            </Button>
+                        </form>
                     </div>
-                    <AddIcon className={classes.addIcon} onClick={this.props.clicked}/>
-                    <Button color="inherit" className={classes.account} component={Link} to={"/account/" + userId}>Account</Button>
-                    <Button color="inherit" className={classes.logout} component={Link} to="/logout">Logout</Button>
-                </Toolbar>
-            </AppBar>
+                </Fade>
+            </Modal>
+        </>
         )
     }
 }
