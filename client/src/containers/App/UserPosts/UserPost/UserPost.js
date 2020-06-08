@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
 import axios from 'axios';
+
 import { withStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
-import HomepagePost from './HomepagePost/HomepagePost';
-import NavbarApp from '../../../components/UI/NavBar/NavbarApp';
-import HomepagePostLikes from './HomepagePostLikes/HomepagePostLikes'
-import classesHomepage from './HomePage.module.css';
 import { Grid } from '@material-ui/core';
 
+import NavbarApp from '../../../../components/UI/NavBar/NavbarApp';
+import HomepagePost from '../../HomePage/HomepagePost/HomepagePost';
+import HomepagePostLikes from '../../HomePage/HomepagePostLikes/HomepagePostLikes';
+import PostComment from './PostComment/PostComment';
+import classesPost from './UserPost.module.css';
 
 const styles = (theme) => ({
     modal: {
@@ -36,27 +37,30 @@ const styles = (theme) => ({
 });
 
 
-class HomePage extends Component {
-    constructor(props){
+class UserPost extends Component {
+    constructor(props) {
         super(props);
         this.state = {
-            postsData: null,
+            postData: null,
             loading: true,
             open: false,
             likesData: null,
-            likesLoading: true
+            likesLoading: true,
+            commentsData: null,
+            commentsLoading: false
         }
         this.handleOpen = this.handleOpen.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.openLikes = this.openLikes.bind(this);
+        this.loadComment = this.loadComment.bind(this);
     }
 
     componentDidMount() {
-        const userId = localStorage.getItem('userId');
+        const userId = localStorage.getItem("userId");
         const token = localStorage.getItem('token');
-        console.log(token);
-        console.log("inside did mount");
-        axios.get(`http://localhost:4000/getfriendspost/${userId}`, {
+        console.log(this.props);
+        const { id } = this.props.match.params;
+        axios.post(`http://localhost:4000/getpost/${id}`, {userId: userId}, {
             headers: {
                 Authorization: 'Bearer ' + token
             }
@@ -64,17 +68,42 @@ class HomePage extends Component {
         .then((result) => {
             console.log(result);
             this.setState({
-                postsData: result.data,
-                loading: false
+                postData: result.data,
+                loading: false,
+                commentsLoading: true
             });
+            this.loadComment();
         })
         .catch((err) => {
             console.log("not valid")
             console.log(err);
+        })
+        
+    }
+
+    loadComment = () =>{
+        // console.log(insi)
+        const token = localStorage.getItem('token');
+        const { id } = this.props.match.params;
+        axios.get(`http://localhost:4000/getcomments/${id}`, {
+            headers: {
+                Authorization: 'Bearer ' + token
+            }
+        })
+        .then((result) => {
+            console.log(result);
             this.setState({
-                // errors: err.response.data
-                loading: false
+                commentsData: result.data,
+                commentsLoading: false
+            });
+        })
+        .catch((err) => {
+            // console.log("not valid")
+            this.setState({
+                commentsData: null,
+                commentsLoading: false
             })
+            console.log(err);
         })
     }
 
@@ -114,31 +143,39 @@ class HomePage extends Component {
     };
 
     render() {
+        // const 
         const { classes } = this.props;
-        // const { loading } = this.state;
+        console.log(this.state.commentsData);
+        console.log(`comments loading ${this.state.commentsLoading}`);
+        console.log(`loading ${this.state.loading}`);
         return (
-            <div>
+            <div className={classesPost.form}>
                 <NavbarApp />
-                <div className={classesHomepage.container}>
-                    <Grid container /*className={classes.form}*/>
-                        <Grid item sm={4} xs={1}/>
-                        <Grid item sm={4} xs={10} className={classesHomepage.form}>
-                            {/* <h1>{this.state.home}</h1> */}
-                            {this.state.loading ? <CircularProgress size={70} className={classesHomepage.loading}/> : this.state.postsData ?
-                                this.state.postsData.map((userPost) => {
-                                    // if(post.posts === "no posts available") {
-                                    //     return null;
-                                    // }
-                                    // else {
-                                            return <HomepagePost key={userPost.post._id} liked={userPost.liked} postData={userPost.post} profileData={userPost.profileData} clicked={this.openLikes}/>
-                                        // })
-                                    // }
-                                }) : <h1>No Posts from your Friends</h1>
+                <Grid container /*className={classes.form}*/>
+                    <Grid item sm={4} xs={1}/>
+                    <Grid item sm={4} xs={10}>
+                        <div>
+                            {this.state.loading ? <CircularProgress size={70} className={classesPost.loading}/> :
+                                <HomepagePost key={this.state.postData.postData._id} liked={this.state.postData.liked} postData={this.state.postData.postData} profileData={this.state.postData.profileData} clicked={this.openLikes}/>
                             }
-                        </Grid>
-                        <Grid item sm={4} xs={1}/>
+                        </div>
+                        <div className={classesPost.commentsDiv}>
+                            {this.state.commentsData ?
+                                (<div className={classesPost.countDiv}>
+                                    <h2 className={classesPost.count}>{this.state.postData.postData.commentCount}&nbsp;Comments</h2>
+                                </div>) : null
+                            }
+                            {(!this.state.commentsLoading && this.state.loading) ? null : 
+                                (this.state.commentsLoading && !this.state.loading) ? <CircularProgress size={30} className={classesPost.commentsLoading}/> : 
+                                    this.state.commentsData ? <div className={classesPost.commentsBox}>
+                                        {this.state.commentsData.map((data) => {
+                                            return <PostComment key={data.id} data={data} />
+                                        })} </div>: <p className={classes.p}>No Comments Yet</p>
+                            }
+                        </div>
                     </Grid>
-                </div>
+                    <Grid item sm={4} xs={1}/>
+                </Grid>
                 <Modal
                     aria-labelledby="transition-modal-title"
                     aria-describedby="transition-modal-description"
@@ -154,12 +191,12 @@ class HomePage extends Component {
                         <div className={classes.paper}>
                             {this.state.likesLoading ? <CircularProgress size={30} className={classes.likesLoader}/> :
                                 this.state.likesData ?
-                                <div className={classesHomepage.backdrop}>
-                                    <div className={classesHomepage.h2Div}>
-                                        <h2 className={classesHomepage.h2}>Likes</h2>
+                                <div className={classesPost.backdrop}>
+                                    <div className={classesPost.h2Div}>
+                                        <h2 className={classesPost.h2}>Likes</h2>
                                     </div>
-                                    <div className={classesHomepage.outerDiv}> 
-                                    <div className={classesHomepage.likesArea}>
+                                    <div className={classesPost.outerDiv}> 
+                                    <div className={classesPost.likesArea}>
                                         {this.state.likesData ? this.state.likesData.map((data) => {
                                                 console.log(data);
                                                 return <HomepagePostLikes key={data.userId} likesData={data}/>
@@ -177,4 +214,4 @@ class HomePage extends Component {
     }
 }
 
-export default withStyles(styles)(HomePage);
+export default withStyles(styles)(UserPost);

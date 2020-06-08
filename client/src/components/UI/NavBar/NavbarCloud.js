@@ -33,7 +33,10 @@ class NavbarCloud extends Component {
         return (
             <AppBar>
                 <Toolbar>
-                    <HomeIcon className={classes.homeIcon}/>
+                    <Link to="/homepage" style={{textDecoration: 'none', color: 'white'}}>
+                        <HomeIcon className={classes.homeIcon} />
+                    </Link>
+                    {/* <Button color="inherit" style={{fontSize: '1.3rem'}} component={Link} to="/homepage">App</Button> */}
                     <AddIcon className={classes.addIcon} onClick={this.props.clicked}/>  
                     <Button color="inherit" className={classes.logout} component={Link} to="/logout">Logout</Button>                  
                 </Toolbar>

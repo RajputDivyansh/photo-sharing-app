@@ -1,16 +1,39 @@
-.container{
+.form {
     margin: 80px auto 0 auto;
-    /* max-width: 1200px; */
+    display: flex;
+    flex-direction: column;
 }
 
 .loading {
+    margin-left: 46%;
     margin-top: 52%;
-    margin-left: 48%;
 }
 
-.form {
+.commentsDiv {
     display: flex;
     flex-direction: column;
+    background-color: #fff;
+    width: 600px;
+    margin-bottom: 30px;
+    /* overflow: auto; */
+}
+
+.countDiv {
+    width: 100%;
+    border-bottom: 1px solid #dbdbdb;
+}
+
+.count {
+    text-align: center;
+}
+
+.commentsLoading {
+    margin-left: 40%;
+    /* margin-top: 1%; */
+}
+
+.commentsBox {
+    height: auto;
 }
 
 .h2Div {
@@ -47,23 +70,3 @@
     position: relative;
 }
 
-/*
-.inner {
-    height: 356px;
-    overflow: hidden auto;
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-    padding: 0;
-    position: relative;
-}
-
-.likesArea {
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 3300px; 
-    padding-top: 0px;
-    margin: 0;
-    padding: 0;
-    position: relative;
-} */

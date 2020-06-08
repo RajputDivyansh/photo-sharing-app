@@ -25,7 +25,7 @@ export class UserPosts extends Component {
 
         return (
             <div className={classes.mainDiv}>
-                <Link to="/" className={classes.link}>
+                <Link to={"/post/" + this.props.data._id} className={classes.link}>
                     <div className={classes.div}>
                         <img src={imageData} alt="userImage" className={classes.image}/>
                         {/* <p>hey there</p> */}

@@ -103,7 +103,7 @@ class Login extends Component {
                 // console.log(this.state);
                 localStorage.setItem('token', res.data.token);
                 localStorage.setItem('userId', res.data.userId);
-                this.props.history.push("/options");
+                this.props.history.push("/homepage");
                 // const remainingMilliseconds = 60*60*1000;
                 // const expiryDate = new Date(
                 //     new Date().getTime() + remainingMilliseconds

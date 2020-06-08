@@ -6,6 +6,8 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import CircularProgress from '@material-ui/core/CircularProgress';
+// import fs from 'fs';
+
 import UserImages from './UserImages/UserImages';
 import NavbarCloud from '../../components/UI/NavBar/NavbarCloud';
 import ClassesInput from './Cloud.module.css';
@@ -19,7 +21,8 @@ const styles = (theme) => ({
     paper: {
         backgroundColor: theme.palette.background.paper,
         width: '500px',
-        border: '2px solid #000',
+        // border: '2px solid #000',
+        outline: 'none',
         boxShadow: theme.shadows[5],
         padding: theme.spacing(2, 4, 3),
     },

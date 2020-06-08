@@ -6,7 +6,7 @@ module.exports = (req, res, next) => {
     // console.log(authHeader);
     if(!authHeader) {
         console.log("not auth");
-        res.status(401).josn({error: "not valid"});
+        res.status(401).json({error: "not valid"});
     }
     else {
         const token = authHeader.split(' ')[1];

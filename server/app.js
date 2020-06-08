@@ -12,7 +12,8 @@ const { getUser, postProfile, searchUser } = require('./controllers/searchUser')
 const { changePassword, deleteAccount, userAccount } = require('./controllers/Account');
 const { getNotifications, saveNotification, deleteRequest } = require('./controllers/notification');
 const { addFriend, displayFriends, removeFriend } = require('./controllers/friends');
-const { addPost, getUsersPost, getFriendsPost } = require('./controllers/post');
+const { addPost, getUsersPost, getSinglePost, getFriendsPost } = require('./controllers/post');
+const { postLike, postUnlike, getLikes, postComment, getComments } = require('./controllers/likesAndComments');
 
 const MONGODB_URL =
     "mongodb+srv://divyansh:divyansh@college-byypw.mongodb.net/socialMediaApp?retryWrites=true&w=majority";
@@ -24,13 +25,6 @@ app.use(bodyParser.json());
 app.use(multer({}).array('file',10));
 
 
-app.get("/homepage",isAuth,(req,res) => {
-    res.json({home: "hello world"});
-});
-
-app.get("/temp",isAuth,(req,res) => {
-    res.json({temp: "Inside Temp"});
-});
 
 app.post("/signup", signUp);
 app.post("/login", logIn);
@@ -45,24 +39,30 @@ app.get("/checktokenexpiry",isAuth,(req,res) => {
 //cloud routes
 app.get("/cloud/:userId", isAuth, displayImage);
 app.post("/cloud", isAuth, cupload);
-app.post("/cloud/delete/:imageId", deleteImage);
+app.post("/cloud/delete/:imageId", isAuth,deleteImage);
 
 //Photo App routes
-app.post("/searchuser", searchUser);
+app.post("/searchuser", isAuth,searchUser);
 app.post("/getProfile/:userId", isAuth, getUser);
 app.post("/profile/:userId", isAuth, postProfile);
 app.get("/useraccount/:userId", isAuth, userAccount);
-app.post("/change-password", changePassword);
-app.post("/delete-everything", deleteAccount);
-app.post("/notification", saveNotification);
-app.get("/notification/:id", getNotifications);
-app.post("/delete-request", deleteRequest);
-app.post("/add-friend", addFriend);
-app.get("/friends/:userId", displayFriends);
-app.post("/deletefriend", removeFriend);
-app.post("/addpost", addPost);
-app.get("/getuserposts/:userId", getUsersPost);
-app.get("/getfriendspost/:userId", getFriendsPost);
+app.post("/change-password", isAuth,changePassword);
+app.post("/delete-everything", isAuth,deleteAccount);
+app.post("/notification", isAuth,saveNotification);
+app.get("/notification/:id", isAuth,getNotifications);
+app.post("/delete-request", isAuth,deleteRequest);
+app.post("/add-friend", isAuth,addFriend);
+app.get("/friends/:userId", isAuth,displayFriends);
+app.post("/deletefriend", isAuth,removeFriend);
+app.post("/addpost", isAuth,addPost);
+app.post("/getpost/:postId", isAuth,getSinglePost);
+app.get("/getuserposts/:userId", isAuth,getUsersPost);
+app.get("/getfriendspost/:userId", isAuth,getFriendsPost);
+app.post("/like", isAuth,postLike);
+app.post("/unlike", isAuth,postUnlike);
+app.get("/getlikes/:postId", isAuth,getLikes);
+app.post("/comment", isAuth,postComment);
+app.get("/getcomments/:postId", isAuth,getComments);
 
 mongoose
 .connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true })

@@ -86,6 +86,7 @@ const styles = (theme) => ({
         backgroundColor: theme.palette.background.paper,
         width: '600px',
         height: '600px',
+        outline: 'none',
         boxShadow: theme.shadows[5],
     },
     progess: {

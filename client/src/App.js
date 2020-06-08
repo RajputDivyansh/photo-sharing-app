@@ -7,11 +7,10 @@ import './App.css';
 import Login from './containers/Login/Login';
 import Signup from './containers/SignUp/Signup';
 import HomePage from './containers/App/HomePage/HomePage';
-// import Temp from './containers/Temp';
+import Post from './containers/App/UserPosts/UserPost/UserPost';
 import Account from './containers/App/UserAccout/UserAccount';
 import FriendsList from './containers/App/UserAccout/FriendsList/FriendsList';
 import Logout from './containers/Login/Logout';
-import Options from './components/UI/Options/Options';
 import Cloud from './containers/Cloud/Cloud';
 import UserProfile from './containers/App/UserProfile/UserProfile';
 import EditProfile from './containers/App/EditProfile/EditProfile';
@@ -75,10 +74,10 @@ class App extends Component {
 					<Switch>
 						<Route exact path="/" component={Login}/>
 						<Route exact path="/signup" component={Signup}/>
-						<Route exact path="/logout" component={Logout}/> 
-						<Route path="/options" component={Options} />
+						<Route exact path="/logout" component={Logout}/>
 						<Route path="/cloud" component={Cloud} />
 						<Route exact path="/homepage" component={HomePage}/>
+						<Route exact path="/post/:id" component={Post} />
 						<Route exact path="/notifications" component={Notification}/> 
 						<Route exact path="/account/:id" component={Account}/>
 						<Route exact path="/friends" component={FriendsList}/>
