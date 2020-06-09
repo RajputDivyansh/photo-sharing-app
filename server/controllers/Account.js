@@ -82,23 +82,134 @@ exports.changePassword = (req,res,next) => {
             })
 }
 
+// exports.deleteAccount = (req,res,next) => {
+//     const userId = req.body.userId;
+//     UserProfile.findOneAndDelete({userID: userId})
+//         .then((result) => {
+//             console.log(result);
+//             return User.findByIdAndDelete(userId)
+//                     .then((result) => {
+//                         console.log(result);
+//                         return res.status(200).json("deleted");
+//                     })
+//                     .catch((err) => {
+//                         console.log(err);
+//                         return res.status(500).json("something went wrong");
+//                     })
+//         })
+//         .catch((err) => {
+//             console.log(err);
+//             return res.status(500).json("something went wrong");
+//         })
+// }
+
 exports.deleteAccount = (req,res,next) => {
     const userId = req.body.userId;
-    UserProfile.findOneAndDelete({userID: userId})
-        .then((result) => {
-            console.log(result);
-            return User.findByIdAndDelete(userId)
-                    .then((result) => {
-                        console.log(result);
-                        return res.status(200).json("deleted");
+    Cloud.deleteMany({userID: userId})
+    .then((result)=>{
+        console.log(result);
+        Friends.findOne({userID: userId})
+        .then((result2)=>{
+            console.log(result2); 
+            if(result2){
+                result2.friendsID.forEach((id) => {
+                    Friends.findOneAndUpdate({userID : id}, {$pull: {friendsID : userId}}, {useFindAndModify: false})
+                    .then((rslt)=>{ })
+                    .catch((err)=>{ return res.status(500).json("Something went wrong") });
+                });
+            Friends.findOneAndDelete({userID: userId})
+            .then((rslt)=>{ })
+            .catch((err)=>{ return res.status(500).json("Something went wrong") });
+            }
+            Notifications.deleteMany({recieverID: userId})
+            .then((result3)=>{
+                console.log(result3);
+                Notifications.deleteMany({senderID: userId})
+                .then((result4)=>{
+                    Posts.find({userID: userId})
+                    .then((result5)=>{
+                        console.log(result5);
+                        if(result5){
+                            result5.forEach((object)=>{
+                                Likes.deleteMany({postID: object._id})
+                                .then((reslt)=>{})
+                                .catch((err)=>{
+                                    console.log(err);
+                                    return res.status(500).json("Something went wrong");
+                                });
+                                Comments.deleteMany({postID: object._id})
+                                .then((reslt)=>{})
+                                .catch((err)=>{
+                                    console.log(err);
+                                    return res.status(500).json("Something went wrong");
+                                })
+                            })
+                        }
+                        Likes.deleteMany({userID: userId})
+                        .then((result6)=>{
+                            console.log(result6);
+                            Comments.deleteMany({userID: userId})
+                            .then((result7)=>{
+                                console.log(result7);
+                                Posts.deleteMany({userID: userId})
+                                .then((result9)=>{
+                                    console.log(result9);
+                                    UserProfile.findOneAndDelete({userID: userId})
+                                    .then((result10) => {
+                                        console.log(result10);
+                                        return User.findByIdAndDelete(userId)
+                                                .then((result11) => {
+                                                    console.log("Account Deleted");
+                                                    return res.status(200).json("Account Deleted");
+                                                })
+                                                .catch((err) => {
+                                                    console.log(err);
+                                                    return res.status(500).json("Something went wrong");
+                                                })
+                                    })
+                                    .catch((err) => {
+                                        console.log(err);
+                                        return res.status(500).json("Something went wrong");
+                                    })
+                                })
+                                .catch((err)=>{
+                                    console.log(err);
+                                    return res.status(500).json("Something went wrong");
+                                })
+                            })
+                            .catch((err)=>{
+                                console.log(err);
+                                return res.status(500).json("Something went wrong");
+                            })
+                       
+                        })
+                        .catch((err)=>{ 
+                            console.log(err);
+                            return res.status(500).json("Something went wrong"); 
+                        })
                     })
-                    .catch((err) => {
+                    .catch((err)=>{ 
                         console.log(err);
-                        return res.status(500).json("something went wrong");
+                        return res.status(500).json("Something went wrong"); 
                     })
+                })
+                .catch((err)=>{ 
+                    console.log(err);
+                    return res.status(500).json("Something went wrong"); 
+                })
+            })
+            .catch((err)=>{ 
+                console.log(err);
+                return res.status(500).json("Something went wrong"); })   
         })
         .catch((err) => {
             console.log(err);
             return res.status(500).json("something went wrong");
-        })
+        });
+    })
+    .catch((err) => {
+        console.log(err);
+        return res.status(500).json("something went wrong");
+    });
+   
 }
