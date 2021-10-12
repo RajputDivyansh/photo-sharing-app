@@ -10,7 +10,7 @@ const isEmpty = (string) => {
 };
 
 const passwordLength = (password) => {
-  if(password.length >5 ) return true;
+  if(password.length > 5 ) return true;
   else return false;
 }
 
@@ -93,7 +93,6 @@ exports.reduceUserDetails = (data) => {
       userDetails.website = `http://${data.website.trim()}`;
     } else userDetails.website = data.website;
   }
-  // if (!isEmpty(data.location.trim())) userDetails.location = data.location;
-
+  
   return userDetails;
 };
